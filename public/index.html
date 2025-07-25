@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Supabase 文件上传</title>
+  </head>
+  <body>
+    <h2>文件上传</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">上传</button>
+
+    <h2>文件列表</h2>
+    <div id="fileList"></div>
+
+    <script>
+      async function uploadFile() {
+        const file = document.getElementById("fileInput").files[0];
+        if (!file) return alert("请选择文件");
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        alert(data.message);
+        loadFiles();
+      }
+
+      async function loadFiles() {
+        const res = await fetch("/files");
+        const files = await res.json();
+        const list = document.getElementById("fileList");
+        list.innerHTML = files
+          .map((f) => `<p><a href="${f.url}" target="_blank">${f.name}</a></p>`)
+          .join("");
+      }
+
+      loadFiles();
+    </script>
+  </body>
+</html>
