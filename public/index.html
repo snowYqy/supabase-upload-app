@@ -1,39 +1,204 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <title>Supabase 文件上传</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传器</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
   <body>
-    <h2>文件上传</h2>
-    <input type="file" id="fileInput" />
-    <button onclick="uploadFile()">上传</button>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <!-- 主容器 -->
+    <div class="container">
+      <!-- 炫酷标题 -->
+      <div class="hero-section">
+        <h1 class="main-title">
+          <span class="title-word title-word-1">🚀</span>>
+          <span class="title-word title-word-3">文件</span>
+          <span class="title-word title-word-4">上传器</span>
+        </h1>
+      </div>
 
-    <h2>文件列表</h2>
-    <div id="fileList"></div>
+      <!-- 上传区域 -->
+      <div class="upload-box">
+        <h2><i class="fas fa-cloud-upload-alt"></i> 文件上传</h2>
+        <div class="upload-area" id="uploadArea">
+          <i class="fas fa-file-upload upload-icon"></i>
+          <p>拖拽文件到这里或点击选择文件</p>
+          <input type="file" id="fileInput" accept="*/*" />
+        </div>
+        <button onclick="uploadFile()" class="upload-btn">
+          <i class="fas fa-rocket"></i> 开始上传
+        </button>
+        
+        <!-- 进度条 -->
+        <div id="progressBar">
+          <div id="progress"></div>
+        </div>
+        <p id="progressText">0%</p>
+        
+        <!-- 消息提示 -->
+        <div id="messageContainer"></div>
+      </div>
 
+      <!-- 文件列表 -->
+      <div class="file-list-box">
+        <h2><i class="fas fa-folder-open"></i> 文件列表</h2>
+        <div class="file-list-header">
+          <span>文件名</span>
+          <span>大小</span>
+          <span>操作</span>
+        </div>
+        <div id="fileList">
+          <div class="loading-container">
+            <div class="loading"></div>
+            <p>正在加载文件列表...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 统计信息 -->
+      <div class="stats-box">
+        <div class="stat-item">
+          <i class="fas fa-file"></i>
+          <span id="totalFiles">0</span>
+          <p>总文件数</p>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-hdd"></i>
+          <span id="totalSize">0 MB</span>
+          <p>总大小</p>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-clock"></i>
+          <span id="lastUpload">--</span>
+          <p>最后上传</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浮动按钮 -->
+    <div class="floating-buttons">
+      <button class="float-btn" onclick="refreshFiles()" title="刷新文件列表">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button class="float-btn" onclick="clearAll()" title="清空所有文件">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="app.js"></script>
+    
+    <!-- 粒子配置脚本 -->
     <script>
-      async function uploadFile() {
-        const file = document.getElementById("fileInput").files[0];
-        if (!file) return alert("请选择文件");
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await fetch("/upload", { method: "POST", body: formData });
-        const data = await res.json();
-        alert(data.message);
-        loadFiles();
-      }
-
-      async function loadFiles() {
-        const res = await fetch("/files");
-        const files = await res.json();
-        const list = document.getElementById("fileList");
-        list.innerHTML = files
-          .map((f) => `<p><a href="${f.url}" target="_blank">${f.name}</a></p>`)
-          .join("");
-      }
-
-      loadFiles();
+      // 粒子背景配置
+      particlesJS('particles-js', {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: '#ffffff'
+          },
+          shape: {
+            type: 'circle',
+            stroke: {
+              width: 0,
+              color: '#000000'
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 40,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: '#ffffff',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 6,
+            direction: 'none',
+            random: false,
+            straight: false,
+            out_mode: 'out',
+            bounce: false,
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: {
+              enable: true,
+              mode: 'repulse'
+            },
+            onclick: {
+              enable: true,
+              mode: 'push'
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
     </script>
   </body>
 </html>

@@ -26,37 +26,40 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   const file = req.file;
   if (!file) return res.status(400).json({ error: "No file uploaded" });
 
-  const fileBuffer = fs.readFileSync(file.path);
-  const fileName = `${Date.now()}-${file.originalname}`;
+  // ✅ 生成安全文件名：时间戳 + 随机数 + 原始扩展名
+  const ext = path.extname(file.originalname);
+  const safeName = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
 
+  const fileBuffer = fs.readFileSync(file.path);
   const { data, error } = await supabase.storage
     .from(bucketName)
-    .upload(fileName, fileBuffer, { contentType: file.mimetype });
+    .upload(safeName, fileBuffer, {
+      contentType: file.mimetype,
+      upsert: true,
+      metadata: { originalName: file.originalname }   // ✅ 保存原始文件名
+    });
 
-  fs.unlinkSync(file.path); // 删除临时文件
+  fs.unlinkSync(file.path);
 
   if (error) return res.status(500).json({ error: error.message });
 
   const { data: publicURL } = supabase.storage
     .from(bucketName)
-    .getPublicUrl(fileName);
+    .getPublicUrl(safeName);
 
-  res.json({ message: "Upload success", url: publicURL.publicUrl });
+  res.json({ message: "Upload success", url: publicURL.publicUrl, name: safeName });
+
 });
 
 // 📌 获取文件列表接口
 app.get("/files", async (req, res) => {
   const { data, error } = await supabase.storage.from(bucketName).list();
-  if (error) return res.status(500).json({ error: error.message });
-
-  const files = data.map((f) => {
-    const { data: publicURL } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(f.name);
-    return { name: f.name, url: publicURL.publicUrl };
-  });
-
+  const files = data.map(f => ({
+    name: f.metadata?.originalName || f.name,  // ✅ 用 metadata 中的原始名
+    url: supabase.storage.from(bucketName).getPublicUrl(f.name).data.publicUrl
+  }));
   res.json(files);
+
 });
 
 app.listen(port, () =>
