@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "调试前端网页",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/public"
+    },
+    {
+      "name": "调试 Node.js 服务",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.js"
+    }
+  ]
+}
