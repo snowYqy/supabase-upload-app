@@ -2,15 +2,18 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文件上传器</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
   </head>
   <body>
     <!-- 粒子背景 -->
     <div id="particles-js"></div>
-    
+
     <!-- 主容器 -->
     <div class="container">
       <!-- 炫酷标题 -->
@@ -33,13 +36,13 @@
         <button onclick="uploadFile()" class="upload-btn">
           <i class="fas fa-rocket"></i> 开始上传
         </button>
-        
+
         <!-- 进度条 -->
         <div id="progressBar">
           <div id="progress"></div>
         </div>
         <p id="progressText">0%</p>
-        
+
         <!-- 消息提示 -->
         <div id="messageContainer"></div>
       </div>
@@ -85,7 +88,11 @@
       <button class="float-btn" onclick="refreshFiles()" title="刷新文件列表">
         <i class="fas fa-sync-alt"></i>
       </button>
-      <button class="float-btn danger" onclick="deleteAllFiles()" title="一键删除所有文件">
+      <button
+        class="float-btn danger"
+        onclick="deleteAllFiles()"
+        title="一键删除所有文件"
+      >
         <i class="fas fa-trash-alt"></i>
       </button>
     </div>
@@ -93,28 +100,28 @@
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="app.js"></script>
-    
+
     <!-- 粒子配置脚本 -->
     <script>
       // 粒子背景配置
-      particlesJS('particles-js', {
+      particlesJS("particles-js", {
         particles: {
           number: {
             value: 80,
             density: {
               enable: true,
-              value_area: 800
-            }
+              value_area: 800,
+            },
           },
           color: {
-            value: '#ffffff'
+            value: "#ffffff",
           },
           shape: {
-            type: 'circle',
+            type: "circle",
             stroke: {
               width: 0,
-              color: '#000000'
-            }
+              color: "#000000",
+            },
           },
           opacity: {
             value: 0.5,
@@ -123,8 +130,8 @@
               enable: false,
               speed: 1,
               opacity_min: 0.1,
-              sync: false
-            }
+              sync: false,
+            },
           },
           size: {
             value: 3,
@@ -133,71 +140,71 @@
               enable: false,
               speed: 40,
               size_min: 0.1,
-              sync: false
-            }
+              sync: false,
+            },
           },
           line_linked: {
             enable: true,
             distance: 150,
-            color: '#ffffff',
+            color: "#ffffff",
             opacity: 0.4,
-            width: 1
+            width: 1,
           },
           move: {
             enable: true,
             speed: 6,
-            direction: 'none',
+            direction: "none",
             random: false,
             straight: false,
-            out_mode: 'out',
+            out_mode: "out",
             bounce: false,
             attract: {
               enable: false,
               rotateX: 600,
-              rotateY: 1200
-            }
-          }
+              rotateY: 1200,
+            },
+          },
         },
         interactivity: {
-          detect_on: 'canvas',
+          detect_on: "canvas",
           events: {
             onhover: {
               enable: true,
-              mode: 'repulse'
+              mode: "repulse",
             },
             onclick: {
               enable: true,
-              mode: 'push'
+              mode: "push",
             },
-            resize: true
+            resize: true,
           },
           modes: {
             grab: {
               distance: 400,
               line_linked: {
-                opacity: 1
-              }
+                opacity: 1,
+              },
             },
             bubble: {
               distance: 400,
               size: 40,
               duration: 2,
               opacity: 8,
-              speed: 3
+              speed: 3,
             },
             repulse: {
               distance: 200,
-              duration: 0.4
+              duration: 0.4,
             },
             push: {
-              particles_nb: 4
+              particles_nb: 4,
             },
             remove: {
-              particles_nb: 2
-            }
-          }
+              particles_nb: 2,
+            },
+          },
         },
-        retina_detect: true
+        retina_detect: true,
       });
     </script>
   </body>
